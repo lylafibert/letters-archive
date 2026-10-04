@@ -19,6 +19,7 @@
     "db:reset": "rm -f data/archive.sqlite && npm run db:migrate"
   },
   "dependencies": {
+    "@edtf-ts/core": "0.6.0",
     "better-sqlite3": "^13.0.3"
   },
   "devDependencies": {

@@ -1,7 +1,6 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
 import { migrate, openDatabase } from "./migrate.js";
 
 function migrationsDir(files: Record<string, string>): string {

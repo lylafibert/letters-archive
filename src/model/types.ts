@@ -26,6 +26,7 @@ export type Letter = {
   destination: Place | null;
   dateText: string | null; // as written in dateSource
   dateSource: DateSource | null; // null exactly when dateText is null
+  dateEdtf: string | null; // EDTF (ISO 8601-2), e.g. "[1826,1827]"; dateEarliest/dateLatest derive from it
   dateEarliest: string | null; // "YYYY-MM-DD", inclusive; null = open-ended
   dateLatest: string | null; // "YYYY-MM-DD", inclusive; null = open-ended
   content: string;

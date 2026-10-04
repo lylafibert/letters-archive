@@ -5,7 +5,6 @@
 // SQLite's error code rather than message text, which repeats the SQL.
 
 import Database from "better-sqlite3";
-import { beforeEach, describe, expect, it } from "vitest";
 import { migrate, openDatabase } from "../../src/db/migrate.js";
 
 const CHECK = "SQLITE_CONSTRAINT_CHECK";
@@ -28,6 +27,7 @@ type LetterRow = {
   destination_id: unknown;
   date_text: unknown;
   date_source: unknown;
+  date_edtf: unknown;
   date_earliest: unknown;
   date_latest: unknown;
   content: unknown;
@@ -42,6 +42,7 @@ const validLetter: LetterRow = {
   destination_id: PORT_ALDWICK,
   date_text: "14th March 1821",
   date_source: "dateline",
+  date_edtf: "1821-03-14",
   date_earliest: "1821-03-14",
   date_latest: "1821-03-14",
   content: "My dear Brother, The thaw has come at last…",
@@ -65,9 +66,9 @@ beforeEach(() => {
 function insertLetter(changes: Partial<LetterRow> = {}): void {
   db.prepare(
     `INSERT INTO letters (id, sender_id, recipient_id, origin_id, destination_id,
-                          date_text, date_source, date_earliest, date_latest, content)
+                          date_text, date_source, date_edtf, date_earliest, date_latest, content)
      VALUES (@id, @sender_id, @recipient_id, @origin_id, @destination_id,
-             @date_text, @date_source, @date_earliest, @date_latest, @content)`,
+             @date_text, @date_source, @date_edtf, @date_earliest, @date_latest, @content)`,
   ).run({ ...validLetter, ...changes });
 }
 
@@ -136,6 +137,7 @@ describe("letters", () => {
       destination_id: null,
       date_text: null,
       date_source: null,
+      date_edtf: null,
       date_earliest: null,
       date_latest: null,
     };
@@ -220,7 +222,9 @@ describe("letters", () => {
 
   describe.each(["date_earliest", "date_latest"])("%s", (column) => {
     // The other bound is left empty so the earliest <= latest rule can't interfere.
-    const onlyThisBound = (date: string) => ({ date_earliest: null, date_latest: null, [column]: date });
+    function onlyThisBound(date: string) {
+      return { date_earliest: null, date_latest: null, [column]: date };
+    }
 
     it.each(["1821-03-14", "1840-02-29"])("accepts the real date %s", (date) => {
       expect(() => insertLetter(onlyThisBound(date))).not.toThrow();
@@ -238,17 +242,34 @@ describe("letters", () => {
     });
   });
 
+  describe("date EDTF", () => {
+    it("rejects empty EDTF", () => {
+      expect(errorCode(() => insertLetter({ date_edtf: "" }))).toBe(CHECK);
+    });
+
+    it("rejects a range without EDTF to derive it from", () => {
+      expect(errorCode(() => insertLetter({ date_edtf: null }))).toBe(CHECK);
+    });
+
+    it("accepts EDTF that gives no range (open at both ends)", () => {
+      expect(() => insertLetter({ date_edtf: "../..", date_earliest: null, date_latest: null })).not.toThrow();
+    });
+  });
+
   describe("date range", () => {
-    it("accepts a range with no earliest date (e.g. 'before 1840')", () => {
-      expect(() => insertLetter({ date_earliest: null, date_latest: "1839-12-31" })).not.toThrow();
+    it("accepts a range with no earliest date ('before 1840')", () => {
+      const before1840 = { date_edtf: "../1839", date_earliest: null, date_latest: "1839-12-31" };
+      expect(() => insertLetter(before1840)).not.toThrow();
     });
 
     it("accepts a range with no latest date", () => {
-      expect(() => insertLetter({ date_earliest: "1821-03-14", date_latest: null })).not.toThrow();
+      const from1839 = { date_edtf: "1839/..", date_earliest: "1839-01-01", date_latest: null };
+      expect(() => insertLetter(from1839)).not.toThrow();
     });
 
-    it("accepts a range spanning several years (e.g. '1826 or 1827')", () => {
-      expect(() => insertLetter({ date_earliest: "1826-01-01", date_latest: "1827-12-31" })).not.toThrow();
+    it("accepts a range spanning several years ('1826 or 1827')", () => {
+      const eitherYear = { date_edtf: "[1826,1827]", date_earliest: "1826-01-01", date_latest: "1827-12-31" };
+      expect(() => insertLetter(eitherYear)).not.toThrow();
     });
 
     it("rejects an earliest date after the latest date", () => {

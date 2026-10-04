@@ -17,12 +17,15 @@ CREATE TABLE letters (
   destination_id INTEGER REFERENCES places (id),
   date_text      TEXT CHECK (date_text <> ''),               -- as written in date_source
   date_source    TEXT CHECK (date_source IN ('dateline', 'postmark', 'endorsement', 'annotation', 'catalogue')),
+  date_edtf      TEXT CHECK (date_edtf <> ''),               -- cataloguer's EDTF; the range is derived from it
   -- Inclusive range, 'YYYY-MM-DD'; NULL bound = open-ended.
   -- IS, not =: date() returns NULL for bad input, and a NULL CHECK passes.
   date_earliest  TEXT CHECK (date(date_earliest) IS date_earliest),
   date_latest    TEXT CHECK (date(date_latest) IS date_latest),
   content        TEXT NOT NULL CHECK (content <> ''),
   CHECK ((date_text IS NULL) = (date_source IS NULL)),
+  -- A range needs an EDTF value to come from. Not the reverse: '../..' has no bounds.
+  CHECK (date_edtf IS NOT NULL OR (date_earliest IS NULL AND date_latest IS NULL)),
   CHECK (date_earliest IS NULL OR date_latest IS NULL OR date_earliest <= date_latest)
 ) STRICT;
 
