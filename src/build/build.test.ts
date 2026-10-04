@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { renderIndexPage } from "../src/build/build.js";
+import { renderIndexPage } from "./build.js";
 
 describe("renderIndexPage", () => {
   it("renders a valid HTML document with a language and a heading", () => {
