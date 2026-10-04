@@ -39,8 +39,9 @@ describe("buildSite", () => {
     expect(letterPages).toHaveLength(LETTERS.length);
   });
 
-  it("writes the stylesheet and a JSON index of every letter", () => {
+  it("writes the stylesheet, favicon and a JSON index of every letter", () => {
     expect(existsSync(path.join(outputDir, "styles.css"))).toBe(true);
+    expect(existsSync(path.join(outputDir, "favicon.svg"))).toBe(true);
     expect(parseJsonIndex(read("letters.json")).letters).toHaveLength(LETTERS.length);
   });
 

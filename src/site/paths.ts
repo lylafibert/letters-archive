@@ -6,6 +6,7 @@ export const CORRESPONDENTS_PATH = "correspondents/";
 export const DECADES_PATH = "decades/";
 export const JSON_INDEX_PATH = "letters.json";
 export const STYLESHEET_PATH = "styles.css";
+export const FAVICON_PATH = "favicon.svg";
 
 export const letterPath = (letterId: string): string => {
   return `letters/${slugify(letterId)}/`;

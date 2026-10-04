@@ -29,6 +29,11 @@ describe("Layout", () => {
     expect(document.querySelector('link[rel="stylesheet"]')).toHaveAttribute("href", "../../styles.css");
   });
 
+  it("links the favicon relative to the page", () => {
+    renderLayout("correspondents/eliza-marrable/");
+    expect(document.querySelector('link[rel="icon"]')).toHaveAttribute("href", "../../favicon.svg");
+  });
+
   it("offers a skip link to the main content", () => {
     const page = renderLayout(CORRESPONDENTS_PATH);
     expect(page.getByRole("link", { name: "Skip to main content" })).toHaveAttribute("href", "#main");

@@ -3,11 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFAULT_DATABASE_PATH, openDatabase } from "../db/migrate";
 import { loadLetters } from "../db/queries";
-import { STYLESHEET_PATH } from "./paths";
+import { FAVICON_PATH, STYLESHEET_PATH } from "./paths";
 import { renderSite } from "./render-site";
 
 const DEFAULT_OUTPUT_DIR = fileURLToPath(new URL("../../dist/", import.meta.url));
 const STYLESHEET_SOURCE = fileURLToPath(new URL("./styles.css", import.meta.url));
+const FAVICON_SOURCE = fileURLToPath(new URL("./favicon.svg", import.meta.url));
 
 type BuildOptions = { databasePath?: string; outputDir?: string };
 
@@ -21,7 +22,8 @@ export const buildSite = async ({
   database.close();
 
   const stylesheet = { path: STYLESHEET_PATH, contents: await readFile(STYLESHEET_SOURCE, "utf8") };
-  const files = [...renderSite(letters), stylesheet];
+  const favicon = { path: FAVICON_PATH, contents: await readFile(FAVICON_SOURCE, "utf8") };
+  const files = [...renderSite(letters), stylesheet, favicon];
   await rm(outputDir, { recursive: true, force: true });
   for (const file of files) {
     const outputPath = path.join(outputDir, file.path);

@@ -1,5 +1,13 @@
 import type { ReactNode } from "react";
-import { CORRESPONDENTS_PATH, DECADES_PATH, HOME_PATH, JSON_INDEX_PATH, STYLESHEET_PATH, relativeHref } from "../paths";
+import {
+  CORRESPONDENTS_PATH,
+  DECADES_PATH,
+  FAVICON_PATH,
+  HOME_PATH,
+  JSON_INDEX_PATH,
+  STYLESHEET_PATH,
+  relativeHref,
+} from "../paths";
 import { REPOSITORY_URL, SITE_NAME } from "../site-config";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { SiteLink, usePagePath } from "./page-path";
@@ -38,6 +46,7 @@ export const Layout = ({ title, description, section, breadcrumbs, children }: L
         <meta name="color-scheme" content="light dark" />
         <title>{title === SITE_NAME ? SITE_NAME : `${title} · ${SITE_NAME}`}</title>
         <meta name="description" content={description} />
+        <link rel="icon" type="image/svg+xml" href={relativeHref(pagePath, FAVICON_PATH)} />
         <link rel="stylesheet" href={relativeHref(pagePath, STYLESHEET_PATH)} />
       </head>
       <body>
