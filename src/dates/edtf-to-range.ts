@@ -22,13 +22,7 @@ import {
   type Precision,
   type TemporalBound,
 } from "@edtf-ts/core";
-import {
-  addUnits,
-  endOf,
-  startOf,
-  type CalendarDate,
-  type DateUnit,
-} from "./calendar-date";
+import { addUnits, endOf, startOf, type CalendarDate, type DateUnit } from "./calendar-date";
 
 export type DateRange = {
   earliest: string | null; // "YYYY-MM-DD", inclusive; null = open-ended
@@ -60,13 +54,8 @@ export function edtfToRange(edtf: string): DateRange {
   // Widen by `margin` whole units: back from the start of the first unit,
   // forward to the end of the last.
   return {
-    earliest: toIsoDate(
-      earliestDate && addUnits(startOf(earliestDate, unit), unit, -margin),
-    ),
-    latest: toIsoDate(
-      latestDate &&
-        endOf(addUnits(startOf(latestDate, unit), unit, margin), unit),
-    ),
+    earliest: toIsoDate(earliestDate && addUnits(startOf(earliestDate, unit), unit, -margin)),
+    latest: toIsoDate(latestDate && endOf(addUnits(startOf(latestDate, unit), unit, margin), unit)),
   };
 }
 
@@ -74,8 +63,7 @@ export function edtfToRange(edtf: string): DateRange {
 function qualifierMargin(parsed: EDTFBase): number {
   if (!isEDTFDate(parsed)) return 0;
   const qualification = parsed.qualification;
-  if (qualification?.uncertainApproximate)
-    return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
+  if (qualification?.uncertainApproximate) return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
   if (qualification?.approximate) return Number(APPROXIMATE_MULTIPLIER);
   if (qualification?.uncertain) return Number(UNCERTAIN_MULTIPLIER);
   return 0;
@@ -83,9 +71,7 @@ function qualifierMargin(parsed: EDTFBase): number {
 
 /** The calendar unit of a precision, or undefined for precisions that can't be widened (e.g. seasons). */
 function precisionUnit(precision: Precision): DateUnit | undefined {
-  return precision === "year" || precision === "month" || precision === "day"
-    ? precision
-    : undefined;
+  return precision === "year" || precision === "month" || precision === "day" ? precision : undefined;
 }
 
 /** The bound's date, or null when it is open or unknown. */

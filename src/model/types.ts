@@ -11,12 +11,7 @@ export type Correspondent = {
   kind: "person" | "organisation";
 };
 
-export type DateSource =
-  | "dateline"
-  | "postmark"
-  | "endorsement"
-  | "annotation"
-  | "catalogue";
+export type DateSource = "dateline" | "postmark" | "endorsement" | "annotation" | "catalogue";
 
 export type Letter = {
   id: string; // catalogue reference, e.g. "MAR/001"

@@ -54,11 +54,11 @@ Parsing and base bounds come from [`@edtf-ts/core`](https://github.com/BobPritch
 | MAR/003 | Michaelmas 1828 | dateline | `1828-09-29` |
 | MAR/004 | 1826 or 1827 | dateline | `[1826,1827]` |
 | MAR/005 | late 1830s | catalogue | `1837/1839` |
-| PEN/001 | recd. 12 Aug. 1833 | endorsement | `../1833-08-12` |
+| PEN/001 | Saturday | dateline (range from endorsement) | `../1833-08-12` |
 | PEN/002 | between 1832 and 1835 | catalogue | `1832/1835` |
 | PEN/003 | spring 1843 | dateline | `1843-21` |
 | PEN/004 | 1840s | catalogue | `184X` |
-| ASH/001 | JU 9 1846 | postmark | `1846-06-09` |
+| ASH/001 | Tuesday 9th June | dateline (year from postmark) | `1846-06-09` |
 | ASH/002 | JY 3 1839 | postmark | `1839-07-03` |
 | ASH/003 | ?1847 | annotation | `1847?` |
 | ASH/004 | early 1850s | catalogue | `1850/1853` |

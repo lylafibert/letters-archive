@@ -8,26 +8,40 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "tsx src/build/build.ts",
+    "build": "npm run db:reset && tsx src/site/build-site.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check": "npm run lint && npm run typecheck && npm test",
+    "check": "npm run lint && npm run typecheck && npm run format:check && npm test",
     "typecheck:watch": "tsc --noEmit --watch",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:reset": "rm -f data/archive.sqlite && npm run db:migrate"
+    "db:reset": "rm -f data/archive.sqlite && npm run -s db:migrate && npm run -s db:seed",
+    "db:seed": "tsx src/db/seed.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@edtf-ts/core": "0.6.0",
-    "better-sqlite3": "^13.0.3"
+    "better-sqlite3": "^13.0.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/better-sqlite3": "^9.6.0",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^24.19.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "eslint": "^10.12.0",
     "globals": "^17.13.0",
+    "html-validate": "^11.16.2",
+    "jsdom": "^30.1.2",
+    "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.0",

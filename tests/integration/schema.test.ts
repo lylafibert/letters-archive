@@ -64,12 +64,14 @@ beforeEach(() => {
 });
 
 function insertLetter(changes: Partial<LetterRow> = {}): void {
-  database.prepare(
-    `INSERT INTO letters (id, sender_id, recipient_id, origin_id, destination_id,
+  database
+    .prepare(
+      `INSERT INTO letters (id, sender_id, recipient_id, origin_id, destination_id,
                           date_text, date_source, date_edtf, date_earliest, date_latest, transcription)
      VALUES (@id, @sender_id, @recipient_id, @origin_id, @destination_id,
              @date_text, @date_source, @date_edtf, @date_earliest, @date_latest, @transcription)`,
-  ).run({ ...validLetter, ...changes });
+    )
+    .run({ ...validLetter, ...changes });
 }
 
 function insertCorrespondent(name: unknown, kind: unknown): void {
@@ -196,12 +198,9 @@ describe("letters", () => {
   });
 
   describe("date text and source", () => {
-    it.each(["dateline", "postmark", "endorsement", "annotation", "catalogue"])(
-      "accepts source %s",
-      (date_source) => {
-        expect(() => insertLetter({ date_source })).not.toThrow();
-      },
-    );
+    it.each(["dateline", "postmark", "endorsement", "annotation", "catalogue"])("accepts source %s", (date_source) => {
+      expect(() => insertLetter({ date_source })).not.toThrow();
+    });
 
     it("rejects any other source", () => {
       expect(sqliteErrorCode(() => insertLetter({ date_source: "guess" }))).toBe(CHECK_FAILED);

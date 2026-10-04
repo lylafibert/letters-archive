@@ -1,4 +1,4 @@
-import { addUnits, daysInMonth, endOf, startOf, type CalendarDate } from "./calendar-date";
+import { addUnits, daysInMonth, endOf, isSameDate, parseIsoDate, startOf, type CalendarDate } from "./calendar-date";
 
 function date(year: number, month: number, day: number): CalendarDate {
   return { year, month, day };
@@ -76,5 +76,25 @@ describe("addUnits", () => {
 
   it("keeps years 0–99 as given rather than mapping them to the 1900s", () => {
     expect(addUnits(date(50, 6, 1), "year", 1)).toEqual(date(51, 6, 1));
+  });
+});
+
+describe("parseIsoDate", () => {
+  it("reads the year, month and day of a YYYY-MM-DD date", () => {
+    expect(parseIsoDate("1821-03-14")).toEqual(date(1821, 3, 14));
+  });
+
+  it.each(["1821-3-14", "14-03-1821", "1821", ""])("rejects %j", (input) => {
+    expect(() => parseIsoDate(input)).toThrow(input);
+  });
+});
+
+describe("isSameDate", () => {
+  it("is true for the same year, month and day", () => {
+    expect(isSameDate(date(1821, 3, 14), date(1821, 3, 14))).toBe(true);
+  });
+
+  it("is false when any part differs", () => {
+    expect(isSameDate(date(1821, 3, 14), date(1821, 3, 15))).toBe(false);
   });
 });

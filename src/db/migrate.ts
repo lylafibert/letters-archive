@@ -9,8 +9,11 @@ export const DEFAULT_MIGRATIONS_DIR = fileURLToPath(new URL("./migrations/", imp
 /** Matches `NNNN_description.sql`; the four digits are the schema version. */
 const MIGRATION_FILE_NAME = /^(\d{4})_.+\.sql$/;
 
-export function openDatabase(databasePath: string = DEFAULT_DATABASE_PATH): Database.Database {
-  const database = new Database(databasePath);
+export function openDatabase(
+  databasePath: string = DEFAULT_DATABASE_PATH,
+  options: Database.Options = {},
+): Database.Database {
+  const database = new Database(databasePath, options);
   database.pragma("foreign_keys = ON");
   return database;
 }
