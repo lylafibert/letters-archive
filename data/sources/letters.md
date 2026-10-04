@@ -119,15 +119,14 @@ additions; `[?]` marks an uncertain reading.
 ## ASH/001
 
 - **Dateline:** Hollinsford, Tuesday 9th June
-- **Address panel:** Revd. & Mrs Penhallow, The Vicarage, Wexcombe
+- **Address panel:** Mrs Penhallow, The Vicarage, Wexcombe
 - **Postmark:** HOLLINSFORD JU 9 1846
-- **Archivist's note:** Year from postmark only. Written jointly; both signatures.
+- **Archivist's note:** Year from postmark only.
 
-> Dear Friends,
-> We are back from the coast and the specimens are all pressed. Edmund insists
-> on adding a line of his own below.
+> Dear Mrs Penhallow,
+> We are back from the coast and the specimens are all pressed. Edmund sends
+> his regards to the fern.
 > Clara Ashdown
-> — and Edmund Ashdown, who sends his regards to the fern.
 
 ---
 
