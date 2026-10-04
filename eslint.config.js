@@ -9,8 +9,8 @@ export default tseslint.config(
   {
     languageOptions: { globals: { ...globals.node } },
     rules: {
-      // Named functions are declarations; arrows are for callbacks and inline use.
-      "func-style": ["error", "declaration", { allowArrowFunctions: false }],
+      // Functions are arrow functions assigned to const, with helpers above their callers.
+      "func-style": ["error", "expression"],
     },
   },
 );

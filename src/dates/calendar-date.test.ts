@@ -1,8 +1,8 @@
 import { addUnits, daysInMonth, endOf, isSameDate, parseIsoDate, startOf, type CalendarDate } from "./calendar-date";
 
-function date(year: number, month: number, day: number): CalendarDate {
+const date = (year: number, month: number, day: number): CalendarDate => {
   return { year, month, day };
-}
+};
 
 describe("startOf", () => {
   it("returns 1 January for a year", () => {

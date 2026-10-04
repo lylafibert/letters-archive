@@ -1,14 +1,14 @@
 import type Database from "better-sqlite3";
-import type { Correspondent, DateSource, Letter, Place } from "../model/types";
+import type { Correspondent, CorrespondentKind, DateSource, Letter, Place } from "../model/types";
 
 type LetterRow = {
   id: string;
   sender_id: number;
   sender_name: string;
-  sender_kind: Correspondent["kind"];
+  sender_kind: CorrespondentKind;
   recipient_id: number | null;
   recipient_name: string | null;
-  recipient_kind: Correspondent["kind"] | null;
+  recipient_kind: CorrespondentKind | null;
   origin_id: number | null;
   origin_name: string | null;
   destination_id: number | null;
@@ -21,7 +21,7 @@ type LetterRow = {
   transcription: string;
 };
 
-// Chronological: by earliest date, or latest when the start is open; undated last.
+// Chronological: by earliest date, or by latest date when the start is open. Undated letters come last.
 const SELECT_LETTERS = `
   SELECT letters.id,
          sender.id AS sender_id, sender.name AS sender_name, sender.kind AS sender_kind,
@@ -40,12 +40,7 @@ const SELECT_LETTERS = `
            letters.id
 `;
 
-export function loadLetters(database: Database.Database): Letter[] {
-  const rows = database.prepare(SELECT_LETTERS).all() as LetterRow[];
-  return rows.map(toLetter);
-}
-
-function toLetter(row: LetterRow): Letter {
+const toLetter = (row: LetterRow): Letter => {
   return {
     id: row.id,
     sender: { id: row.sender_id, name: row.sender_name, kind: row.sender_kind },
@@ -59,16 +54,21 @@ function toLetter(row: LetterRow): Letter {
     dateLatest: row.date_latest,
     transcription: row.transcription,
   };
-}
+};
 
-function toCorrespondent(
+const toCorrespondent = (
   id: number | null,
   name: string | null,
-  kind: Correspondent["kind"] | null,
-): Correspondent | null {
+  kind: CorrespondentKind | null,
+): Correspondent | null => {
   return id !== null && name !== null && kind !== null ? { id, name, kind } : null;
-}
+};
 
-function toPlace(id: number | null, name: string | null): Place | null {
+const toPlace = (id: number | null, name: string | null): Place | null => {
   return id !== null && name !== null ? { id, name } : null;
-}
+};
+
+export const loadLetters = (database: Database.Database): Letter[] => {
+  const rows = database.prepare<[], LetterRow>(SELECT_LETTERS).all();
+  return rows.map(toLetter);
+};

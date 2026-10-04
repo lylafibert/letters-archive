@@ -3,15 +3,15 @@ import { descriptionFor, renderPage } from "../../../tests/support/render";
 import { letterPath } from "../paths";
 import { LetterPage } from "./letter-page";
 
-function renderLetterPage(
+const renderLetterPage = (
   letter = createLetter(),
   neighbours: { previous?: typeof letter; next?: typeof letter } = {},
-) {
+) => {
   return renderPage(
     <LetterPage letter={letter} previous={neighbours.previous} next={neighbours.next} />,
     letterPath(letter.id),
   );
-}
+};
 
 describe("LetterPage", () => {
   it("titles the page with the reference, sender and recipient", () => {

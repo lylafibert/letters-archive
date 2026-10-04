@@ -31,8 +31,8 @@ Parsing and base bounds come from [`@edtf-ts/core`](https://github.com/BobPritch
   multipliers.
 - Not widened: qualifiers on interval endpoints (`1820~/1825`) or on single
   components (`1820-?03`).
-- Invalid or impossible input (`spring 1843`, `1843-02-30`) throws
-  `InvalidEdtfError`, with the input in the message.
+- Invalid or impossible input (`spring 1843`, `1843-02-30`) throws an
+  error with the input in the message.
 
 ## Cataloguing conventions (text → EDTF)
 
@@ -41,26 +41,9 @@ Parsing and base bounds come from [`@edtf-ts/core`](https://github.com/BobPritch
 - **"before X"**: `../(X-1)`. "Before 1840" excludes 1840.
 - **Feast days**: their fixed date (Michaelmas → `MM-09-29`, Christmas Eve →
   `MM-12-24`). Movable feasts (Easter, Whitsun) are out of scope.
-- **Evidence other than the dateline**: a postmark gives the exact day; a
+- **Evidence other than the dateline**: a postmark gives the exact day. A
   receipt endorsement gives the latest possible day (`../1833-08-12`).
-- **Circa**: "c. 1820" → `1820~`; a pencilled "?1847" → `1847?`.
+- **Circa and doubt**: "c. 1820" → `1820~`, and a pencilled "?1847" → `1847?`.
 
-### Per-letter EDTF (for the seed script)
-
-| Ref | `date_text` | `date_source` | `date_edtf` |
-|---|---|---|---|
-| MAR/001 | 14th March 1821 | dateline | `1821-03-14` |
-| MAR/002 | c. 1820 | catalogue | `1820~` |
-| MAR/003 | Michaelmas 1828 | dateline | `1828-09-29` |
-| MAR/004 | 1826 or 1827 | dateline | `[1826,1827]` |
-| MAR/005 | late 1830s | catalogue | `1837/1839` |
-| PEN/001 | Saturday | dateline (range from endorsement) | `../1833-08-12` |
-| PEN/002 | between 1832 and 1835 | catalogue | `1832/1835` |
-| PEN/003 | spring 1843 | dateline | `1843-21` |
-| PEN/004 | 1840s | catalogue | `184X` |
-| ASH/001 | Tuesday 9th June | dateline (year from postmark) | `1846-06-09` |
-| ASH/002 | JY 3 1839 | postmark | `1839-07-03` |
-| ASH/003 | ?1847 | annotation | `1847?` |
-| ASH/004 | early 1850s | catalogue | `1850/1853` |
-| FER/001 | Christmas Eve 1851 | dateline | `1851-12-24` |
-| FER/002 | before 1840 | catalogue | `../1839` |
+The EDTF chosen for each sample letter, with a note where the evidence is
+unusual, is in [`src/db/seed-data.ts`](../src/db/seed-data.ts).

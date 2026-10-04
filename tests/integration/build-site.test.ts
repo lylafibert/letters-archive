@@ -9,6 +9,7 @@ import { migrate, openDatabase } from "../../src/db/migrate";
 import { seedDatabase } from "../../src/db/seed";
 import { LETTERS } from "../../src/db/seed-data";
 import { buildSite } from "../../src/site/build-site";
+import { parseJsonIndex } from "../support/json-index";
 
 const outputDir = mkdtempSync(path.join(tmpdir(), "letters-site-"));
 let htmlFiles: string[];
@@ -24,13 +25,13 @@ beforeAll(async () => {
   htmlFiles = readdirSync(outputDir, { recursive: true, encoding: "utf8" }).filter((file) => file.endsWith(".html"));
 });
 
-function read(file: string): string {
+const read = (file: string): string => {
   return readFileSync(path.join(outputDir, file), "utf8");
-}
+};
 
-function parse(file: string): Document {
+const parse = (file: string): Document => {
   return new JSDOM(read(file)).window.document;
-}
+};
 
 describe("buildSite", () => {
   it("writes a page for every letter", () => {
@@ -40,7 +41,7 @@ describe("buildSite", () => {
 
   it("writes the stylesheet and a JSON index of every letter", () => {
     expect(existsSync(path.join(outputDir, "styles.css"))).toBe(true);
-    expect(JSON.parse(read("letters.json")).letters).toHaveLength(LETTERS.length);
+    expect(parseJsonIndex(read("letters.json")).letters).toHaveLength(LETTERS.length);
   });
 
   it("produces valid HTML that passes the accessibility rules on every page", async () => {

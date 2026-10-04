@@ -7,7 +7,7 @@ import { SITE_NAME } from "../site-config";
 
 type HomePageProps = { letters: readonly Letter[]; correspondentCount: number; decades: readonly number[] };
 
-export function HomePage({ letters, correspondentCount, decades }: HomePageProps) {
+export const HomePage = ({ letters, correspondentCount, decades }: HomePageProps) => {
   const firstDecade = decades[0];
   const lastDecade = decades.at(-1);
   return (
@@ -20,7 +20,8 @@ export function HomePage({ letters, correspondentCount, decades }: HomePageProps
         <h1>{SITE_NAME}</h1>
         <p className="lede">
           Letters exchanged between two families and their circle in the fictional towns of Hollinsford, Wexcombe and
-          Port Aldwick. Each date is recorded as the source gives it and as a range that can be searched and sorted.
+          Port Aldwick. Dates are shown as the source gives them, with a standard date range used to put the letters in
+          order.
         </p>
         <dl className="stats">
           <div>
@@ -51,4 +52,4 @@ export function HomePage({ letters, correspondentCount, decades }: HomePageProps
       </section>
     </Layout>
   );
-}
+};

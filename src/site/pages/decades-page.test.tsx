@@ -1,34 +1,32 @@
 import { createLetter } from "../../../tests/fixtures/letters";
 import { renderPage } from "../../../tests/support/render";
 import { DECADES_PATH } from "../paths";
+import type { DecadeSummary } from "../site-data";
 import { DecadesPage } from "./decades-page";
 
+const letters = (count: number) => Array.from({ length: count }, (_, index) => createLetter({ id: `A/${index}` }));
+
+const renderDecadesPage = (summaries: DecadeSummary[]) =>
+  renderPage(<DecadesPage summaries={summaries} />, DECADES_PATH);
+
 describe("DecadesPage", () => {
-  const summaries = [
-    {
-      decade: 1820,
-      certain: [createLetter({ id: "A/1" }), createLetter({ id: "A/2" })],
-      possible: [createLetter({ id: "A/3" })],
-    },
-    { decade: 1830, certain: [createLetter({ id: "B/1" })], possible: [] },
-  ];
-
-  it("links to each decade with its letter counts", () => {
-    const page = renderPage(<DecadesPage summaries={summaries} />, DECADES_PATH);
+  it("links to each decade's page", () => {
+    const page = renderDecadesPage([{ decade: 1820, certain: letters(1), possible: [] }]);
     expect(page.getByRole("link", { name: "1820s" })).toHaveAttribute("href", "../decades/1820s/");
-    expect(page.getByText("2 letters, 1 possible")).toBeInTheDocument();
-    expect(page.getByText("1 letter")).toBeInTheDocument();
   });
 
-  it("hides the bar chart from assistive technology, since the counts are given as text", () => {
-    renderPage(<DecadesPage summaries={summaries} />, DECADES_PATH);
-    const bars = document.querySelectorAll("svg");
-    expect(bars).toHaveLength(2);
-    for (const bar of bars) expect(bar).toHaveAttribute("aria-hidden", "true");
+  it("counts letters dated within the decade", () => {
+    const page = renderDecadesPage([{ decade: 1840, certain: letters(4), possible: [] }]);
+    expect(page.getByText("4 letters")).toBeInTheDocument();
   });
 
-  it("scales each bar to the busiest decade", () => {
-    renderPage(<DecadesPage summaries={summaries} />, DECADES_PATH);
-    for (const bar of document.querySelectorAll("svg")) expect(bar).toHaveAttribute("viewBox", "0 0 3 1");
+  it("adds letters that may be from the decade", () => {
+    const page = renderDecadesPage([{ decade: 1820, certain: letters(3), possible: letters(1) }]);
+    expect(page.getByText("3 letters, plus 1 that may be from this decade")).toBeInTheDocument();
+  });
+
+  it("describes a decade with only letters that may be from it", () => {
+    const page = renderDecadesPage([{ decade: 1810, certain: [], possible: letters(1) }]);
+    expect(page.getByText("1 letter that may be from this decade")).toBeInTheDocument();
   });
 });

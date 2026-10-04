@@ -9,7 +9,7 @@
 //   So "1820~" is 1818–1822 and "1844-02~" is December 1843 – April 1844.
 // - Sets and lists span from their first to their last member.
 // Not handled: qualifiers on interval endpoints ("1820~/1825") or on single
-// components ("1820-?03"); these use the unwidened bounds.
+// components ("1820-?03"). These use the unwidened bounds.
 import {
   APPROXIMATE_MULTIPLIER,
   UNCERTAIN_APPROXIMATE_MULTIPLIER,
@@ -29,15 +29,35 @@ export type DateRange = {
   latest: string | null; // "YYYY-MM-DD", inclusive; null = open-ended
 };
 
-export class InvalidEdtfError extends Error {
-  override name = "InvalidEdtfError";
-}
+/** How many units of its precision a qualified single date is widened by. */
+const qualifierMargin = (parsed: EDTFBase): number => {
+  if (!isEDTFDate(parsed)) return 0;
+  const qualification = parsed.qualification;
+  if (qualification?.uncertainApproximate) return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
+  if (qualification?.approximate) return Number(APPROXIMATE_MULTIPLIER);
+  if (qualification?.uncertain) return Number(UNCERTAIN_MULTIPLIER);
+  return 0;
+};
 
-export function edtfToRange(edtf: string): DateRange {
+/** The calendar unit of a precision, or undefined for precisions that can't be widened (e.g. seasons). */
+const precisionUnit = (precision: Precision): DateUnit | undefined => {
+  return precision === "year" || precision === "month" || precision === "day" ? precision : undefined;
+};
+
+/** The bound's date, or null when it is open or unknown. */
+const finiteDate = (bound: TemporalBound): CalendarDate | null => {
+  return bound.kind === "finite" ? bound.date : null;
+};
+
+const toIsoDate = (date: CalendarDate | null): string | null => {
+  return date && formatCalendarDate(date);
+};
+
+export const edtfToRange = (edtf: string): DateRange => {
   const parseResult = parse(edtf);
   if (!parseResult.success) {
     const reason = parseResult.errors.map((error) => error.message).join("; ");
-    throw new InvalidEdtfError(`Invalid EDTF date "${edtf}": ${reason}`);
+    throw new Error(`Invalid EDTF date "${edtf}": ${reason}`);
   }
 
   const parsed = parseResult.value;
@@ -57,28 +77,4 @@ export function edtfToRange(edtf: string): DateRange {
     earliest: toIsoDate(earliestDate && addUnits(startOf(earliestDate, unit), unit, -margin)),
     latest: toIsoDate(latestDate && endOf(addUnits(startOf(latestDate, unit), unit, margin), unit)),
   };
-}
-
-/** How many units of its precision a qualified single date is widened by. */
-function qualifierMargin(parsed: EDTFBase): number {
-  if (!isEDTFDate(parsed)) return 0;
-  const qualification = parsed.qualification;
-  if (qualification?.uncertainApproximate) return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
-  if (qualification?.approximate) return Number(APPROXIMATE_MULTIPLIER);
-  if (qualification?.uncertain) return Number(UNCERTAIN_MULTIPLIER);
-  return 0;
-}
-
-/** The calendar unit of a precision, or undefined for precisions that can't be widened (e.g. seasons). */
-function precisionUnit(precision: Precision): DateUnit | undefined {
-  return precision === "year" || precision === "month" || precision === "day" ? precision : undefined;
-}
-
-/** The bound's date, or null when it is open or unknown. */
-function finiteDate(bound: TemporalBound): CalendarDate | null {
-  return bound.kind === "finite" ? bound.date : null;
-}
-
-function toIsoDate(date: CalendarDate | null): string | null {
-  return date && formatCalendarDate(date);
-}
+};

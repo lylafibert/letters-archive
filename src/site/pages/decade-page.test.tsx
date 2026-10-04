@@ -3,10 +3,10 @@ import { renderPage } from "../../../tests/support/render";
 import { decadePath } from "../paths";
 import { DecadePage } from "./decade-page";
 
-function renderDecadePage(possible = [createLetter({ id: "FER/002" })]) {
+const renderDecadePage = (possible = [createLetter({ id: "FER/002" })]) => {
   const summary = { decade: 1830, certain: [createLetter({ id: "PEN/002" })], possible };
   return renderPage(<DecadePage summary={summary} previous={1820} next={1840} />, decadePath(1830));
-}
+};
 
 describe("DecadePage", () => {
   it("names the decade", () => {

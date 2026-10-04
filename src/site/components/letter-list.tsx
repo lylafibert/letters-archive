@@ -4,20 +4,7 @@ import { letterPath } from "../paths";
 import { DateRangeText } from "./date-range-text";
 import { SiteLink } from "./page-path";
 
-/** Letters in the given order, each a card under an h3. Place it under an h2. */
-export function LetterList({ letters }: { letters: readonly Letter[] }) {
-  return (
-    <ol className="letter-list">
-      {letters.map((letter) => (
-        <li key={letter.id}>
-          <LetterCard letter={letter} />
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function LetterCard({ letter }: { letter: Letter }) {
+const LetterCard = ({ letter }: { letter: Letter }) => {
   return (
     <article className="letter-card">
       <h3 className="letter-card__title">
@@ -44,4 +31,17 @@ function LetterCard({ letter }: { letter: Letter }) {
       <p className="letter-card__excerpt">{letterExcerpt(letter)}</p>
     </article>
   );
-}
+};
+
+/** Letters in the given order, each a card under an h3. Place it under an h2. */
+export const LetterList = ({ letters }: { letters: readonly Letter[] }) => {
+  return (
+    <ol className="letter-list">
+      {letters.map((letter) => (
+        <li key={letter.id}>
+          <LetterCard letter={letter} />
+        </li>
+      ))}
+    </ol>
+  );
+};

@@ -4,11 +4,11 @@ import path from "node:path";
 import { migrate, openDatabase } from "./migrate";
 
 /** Writes the given files to a fresh temporary directory and returns its path. */
-function createMigrationsDir(files: Record<string, string>): string {
+const createMigrationsDir = (files: Record<string, string>): string => {
   const migrationsDir = mkdtempSync(path.join(tmpdir(), "migrations-"));
   for (const [fileName, sql] of Object.entries(files)) writeFileSync(path.join(migrationsDir, fileName), sql);
   return migrationsDir;
-}
+};
 
 describe("migrate", () => {
   const migrationsDir = createMigrationsDir({

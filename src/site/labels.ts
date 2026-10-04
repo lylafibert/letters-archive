@@ -1,4 +1,4 @@
-import type { Correspondent, DateSource } from "../model/types";
+import type { CorrespondentKind, DateSource } from "../model/types";
 
 export const DATE_SOURCE_LABELS: Record<DateSource, string> = {
   dateline: "the dateline",
@@ -8,12 +8,12 @@ export const DATE_SOURCE_LABELS: Record<DateSource, string> = {
   catalogue: "the archive catalogue",
 };
 
-export const CORRESPONDENT_KIND_LABELS: Record<Correspondent["kind"], string> = {
+export const CORRESPONDENT_KIND_LABELS: Record<CorrespondentKind, string> = {
   person: "Person",
   organisation: "Organisation",
 };
 
 /** "1 letter", "2 letters". */
-export function countLabel(count: number, singular: string, plural = `${singular}s`): string {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
+export const countLabel = (count: number, singular: string): string => {
+  return `${count} ${count === 1 ? singular : `${singular}s`}`;
+};

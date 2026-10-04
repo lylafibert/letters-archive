@@ -1,4 +1,4 @@
-// The sample archive, from data/sources/letters.md and docs/dates.md.
+// The sample archive, transcribed from data/sources/letters.md, with each date catalogued in EDTF.
 // All people, places and letters are fictional.
 import type { Correspondent, DateSource } from "../model/types";
 
@@ -110,7 +110,7 @@ export const LETTERS: readonly SeedLetter[] = [
     recipient: "hannahPenhallow",
     origin: "wexcombe",
     destination: "kelstowHall",
-    // Dated only "Saturday"; the recipient's endorsement "recd. 12 Aug. 1833" bounds the range.
+    // Dated only "Saturday". The recipient's endorsement "recd. 12 Aug. 1833" bounds the range.
     date: { text: "Saturday", source: "dateline", edtf: "../1833-08-12" },
     transcription: [
       "Dear Miss Greaves,",
@@ -165,7 +165,7 @@ export const LETTERS: readonly SeedLetter[] = [
     recipient: "hannahPenhallow",
     origin: "hollinsford",
     destination: "wexcombe",
-    // The dateline gives no year; the postmark (JU 9 1846) does.
+    // The dateline gives no year, but the postmark (JU 9 1846) does.
     date: { text: "Tuesday 9th June", source: "dateline", edtf: "1846-06-09" },
     transcription: [
       "Dear Mrs Penhallow,",

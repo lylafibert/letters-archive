@@ -5,15 +5,15 @@ import { CorrespondentPage } from "./correspondent-page";
 
 const eliza = createCorrespondent();
 
-function renderCorrespondentPage(
+const renderCorrespondentPage = (
   sent = [createLetter({ id: "MAR/001" })],
   received = [createLetter({ id: "MAR/003" })],
-) {
+) => {
   return renderPage(
     <CorrespondentPage summary={{ correspondent: eliza, sent, received }} />,
     correspondentPath(eliza.name),
   );
-}
+};
 
 describe("CorrespondentPage", () => {
   it("names the correspondent and what kind of correspondent they are", () => {

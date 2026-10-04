@@ -546,92 +546,35 @@ main section > h2 {
 
 /* Decades */
 
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-  margin-block: var(--space-6) var(--space-4);
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-}
-
-.legend__item {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.legend__swatch {
-  inline-size: 1.5rem;
-  block-size: 0.75rem;
-  border-radius: 2px;
-  background: var(--color-accent);
-}
-
-.legend__swatch--possible {
-  opacity: 0.35;
-}
-
 .decade-list {
-  margin: 0;
+  margin: var(--space-6) 0 0;
   padding: 0;
   list-style: none;
   border-block-end: 1px solid var(--color-rule);
 }
 
 .decade-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "label counts"
-    "bar bar";
-  align-items: center;
-  gap: var(--space-2) var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-5);
   padding-block: var(--space-4);
   border-block-start: 1px solid var(--color-rule);
 }
 
-@media (min-width: 40rem) {
-  .decade-row {
-    grid-template-columns: 6rem minmax(0, 1fr) 11rem;
-    grid-template-areas: "label bar counts";
-  }
-}
-
 .decade-row__label {
-  grid-area: label;
+  min-inline-size: 5rem;
   font-family: var(--font-serif);
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 .decade-row__counts {
-  grid-area: counts;
   color: var(--color-text-muted);
-  font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
-  text-align: end;
 }
 
-.decade-row__bar {
-  grid-area: bar;
-  display: block;
-  inline-size: 100%;
-  block-size: 0.75rem;
-  border-radius: 2px;
-  background: var(--color-tint);
-}
-
-.decade-row__bar-certain {
-  fill: var(--color-accent);
-}
-
-.decade-row__bar-possible {
-  fill: var(--color-accent);
-  opacity: 0.35;
-}
-
-/* Motion, forced colours and print */
+/* Motion and print */
 
 @media (prefers-reduced-motion: no-preference) {
   .site-nav a,
@@ -639,21 +582,6 @@ main section > h2 {
     transition:
       background-color 120ms ease,
       border-color 120ms ease;
-  }
-}
-
-@media (forced-colors: active) {
-  .decade-row__bar-certain,
-  .legend__swatch--certain {
-    fill: CanvasText;
-    background: CanvasText;
-  }
-
-  .decade-row__bar-possible,
-  .legend__swatch--possible {
-    fill: GrayText;
-    background: GrayText;
-    opacity: 1;
   }
 }
 

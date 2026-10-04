@@ -4,7 +4,7 @@ import { CORRESPONDENT_KIND_LABELS, countLabel } from "../labels";
 import { correspondentPath } from "../paths";
 import type { CorrespondentSummary } from "../site-data";
 
-export function CorrespondentsPage({ summaries }: { summaries: readonly CorrespondentSummary[] }) {
+export const CorrespondentsPage = ({ summaries }: { summaries: readonly CorrespondentSummary[] }) => {
   return (
     <Layout
       title="Correspondents"
@@ -30,4 +30,4 @@ export function CorrespondentsPage({ summaries }: { summaries: readonly Correspo
       </ul>
     </Layout>
   );
-}
+};

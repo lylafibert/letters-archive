@@ -1,8 +1,8 @@
 import { decadeLabel, decadesOverlapping, isCertainlyWithinDecade } from "./decades";
 
-function range(earliest: string | null, latest: string | null) {
+const range = (earliest: string | null, latest: string | null) => {
   return { earliest, latest };
-}
+};
 
 describe("decadesOverlapping", () => {
   it("returns one decade for a range within it", () => {

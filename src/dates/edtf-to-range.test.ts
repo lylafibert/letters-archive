@@ -1,8 +1,8 @@
-import { InvalidEdtfError, edtfToRange } from "./edtf-to-range";
+import { edtfToRange } from "./edtf-to-range";
 
-function range(earliest: string | null, latest: string | null) {
+const range = (earliest: string | null, latest: string | null) => {
   return { earliest, latest };
-}
+};
 
 const VALID_EDTF_INPUTS = [
   "1821-03-14",
@@ -135,7 +135,7 @@ describe("edtfToRange", () => {
       ["an impossible date", "1843-02-30"],
       ["an empty string", ""],
     ])("rejects %s", (_description, input) => {
-      expect(() => edtfToRange(input)).toThrow(InvalidEdtfError);
+      expect(() => edtfToRange(input)).toThrow(`Invalid EDTF date "${input}"`);
     });
 
     it("includes the original input in the error message", () => {
@@ -144,9 +144,9 @@ describe("edtfToRange", () => {
   });
 
   describe("for every supported input", () => {
-    function isValidIsoDate(value: string) {
+    const isValidIsoDate = (value: string) => {
       return /^\d{4}-\d{2}-\d{2}$/.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
-    }
+    };
 
     it.each(VALID_EDTF_INPUTS)("returns bounds that are null or valid YYYY-MM-DD dates for '%s'", (input) => {
       const { earliest, latest } = edtfToRange(input);

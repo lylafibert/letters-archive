@@ -3,7 +3,7 @@ import { SiteLink } from "./page-path";
 export type PagerLink = { path: string; title: string };
 
 /** Links to the previous and next pages in a sequence. Renders nothing if there are neither. */
-export function Pager({
+export const Pager = ({
   label,
   previous,
   next,
@@ -11,7 +11,7 @@ export function Pager({
   label: string;
   previous?: PagerLink | undefined;
   next?: PagerLink | undefined;
-}) {
+}) => {
   if (!previous && !next) return null;
   return (
     <nav aria-label={label} className="pager">
@@ -29,4 +29,4 @@ export function Pager({
       )}
     </nav>
   );
-}
+};

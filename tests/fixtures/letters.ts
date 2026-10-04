@@ -1,15 +1,15 @@
 import type { Correspondent, Letter, Place } from "../../src/model/types";
 
-export function createCorrespondent(overrides: Partial<Correspondent> = {}): Correspondent {
+export const createCorrespondent = (overrides: Partial<Correspondent> = {}): Correspondent => {
   return { id: 1, name: "Eliza Marrable", kind: "person", ...overrides };
-}
+};
 
-export function createPlace(overrides: Partial<Place> = {}): Place {
+export const createPlace = (overrides: Partial<Place> = {}): Place => {
   return { id: 1, name: "Hollinsford", ...overrides };
-}
+};
 
-/** MAR/001 with every field filled in; override what a test is about. */
-export function createLetter(overrides: Partial<Letter> = {}): Letter {
+/** MAR/001 with every field filled in. Override what a test is about. */
+export const createLetter = (overrides: Partial<Letter> = {}): Letter => {
   return {
     id: "MAR/001",
     sender: createCorrespondent(),
@@ -24,4 +24,4 @@ export function createLetter(overrides: Partial<Letter> = {}): Letter {
     transcription: ["My dear Brother,", "The thaw has come at last.", "Eliza Marrable"].join("\n"),
     ...overrides,
   };
-}
+};

@@ -1,9 +1,9 @@
 import { SiteLink } from "./page-path";
 
-/** A trail of pages; the last crumb, without a path, is the current page. */
+/** A trail of pages. The last crumb, without a path, is the current page. */
 export type Crumb = { label: string; path?: string };
 
-export function Breadcrumbs({ crumbs }: { crumbs: readonly Crumb[] }) {
+export const Breadcrumbs = ({ crumbs }: { crumbs: readonly Crumb[] }) => {
   return (
     <nav aria-label="Breadcrumb" className="breadcrumbs">
       <ol>
@@ -19,4 +19,4 @@ export function Breadcrumbs({ crumbs }: { crumbs: readonly Crumb[] }) {
       </ol>
     </nav>
   );
-}
+};

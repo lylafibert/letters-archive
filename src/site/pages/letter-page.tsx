@@ -10,7 +10,15 @@ import { HOME_PATH, correspondentPath, decadePath, letterPath } from "../paths";
 
 type LetterPageProps = { letter: Letter; previous: Letter | undefined; next: Letter | undefined };
 
-export function LetterPage({ letter, previous, next }: LetterPageProps) {
+const CorrespondentLink = ({ correspondent }: { correspondent: Correspondent }) => {
+  return <SiteLink to={correspondentPath(correspondent.name)}>{correspondent.name}</SiteLink>;
+};
+
+const MissingValue = ({ children = "Unknown" }: { children?: string }) => {
+  return <span className="unknown">{children}</span>;
+};
+
+export const LetterPage = ({ letter, previous, next }: LetterPageProps) => {
   const title = letterTitle(letter);
   const range = letterDateRange(letter);
   const decades = decadesOverlapping(range);
@@ -87,12 +95,4 @@ export function LetterPage({ letter, previous, next }: LetterPageProps) {
       />
     </Layout>
   );
-}
-
-function CorrespondentLink({ correspondent }: { correspondent: Correspondent }) {
-  return <SiteLink to={correspondentPath(correspondent.name)}>{correspondent.name}</SiteLink>;
-}
-
-function MissingValue({ children = "Unknown" }: { children?: string }) {
-  return <span className="unknown">{children}</span>;
-}
+};

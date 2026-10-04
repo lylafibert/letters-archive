@@ -3,16 +3,16 @@ import { migrate, openDatabase } from "../../src/db/migrate";
 import { seedDatabase } from "../../src/db/seed";
 import { LETTERS, type SeedLetter } from "../../src/db/seed-data";
 
-function databaseWith(letters: readonly SeedLetter[]) {
+const databaseWith = (letters: readonly SeedLetter[]) => {
   const database = openDatabase(":memory:");
   migrate(database);
   seedDatabase(database, letters);
   return database;
-}
+};
 
-function seedLetter(overrides: Partial<SeedLetter>): SeedLetter {
+const seedLetter = (overrides: Partial<SeedLetter>): SeedLetter => {
   return { ...LETTERS[0]!, ...overrides };
-}
+};
 
 describe("loadLetters", () => {
   it("loads each letter with its correspondents and places", () => {

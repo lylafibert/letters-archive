@@ -5,7 +5,16 @@ import { CORRESPONDENT_KIND_LABELS, countLabel } from "../labels";
 import { CORRESPONDENTS_PATH } from "../paths";
 import type { CorrespondentSummary } from "../site-data";
 
-export function CorrespondentPage({ summary }: { summary: CorrespondentSummary }) {
+const LetterSection = ({ id, heading, letters }: { id: string; heading: string; letters: readonly Letter[] }) => {
+  return (
+    <section aria-labelledby={id}>
+      <h2 id={id}>{heading}</h2>
+      {letters.length > 0 ? <LetterList letters={letters} /> : <p className="empty">None in the archive.</p>}
+    </section>
+  );
+};
+
+export const CorrespondentPage = ({ summary }: { summary: CorrespondentSummary }) => {
   const { correspondent, sent, received } = summary;
   return (
     <Layout
@@ -25,13 +34,4 @@ export function CorrespondentPage({ summary }: { summary: CorrespondentSummary }
       <LetterSection id="received" heading="Letters received" letters={received} />
     </Layout>
   );
-}
-
-function LetterSection({ id, heading, letters }: { id: string; heading: string; letters: readonly Letter[] }) {
-  return (
-    <section aria-labelledby={id}>
-      <h2 id={id}>{heading}</h2>
-      {letters.length > 0 ? <LetterList letters={letters} /> : <p className="empty">None in the archive.</p>}
-    </section>
-  );
-}
+};

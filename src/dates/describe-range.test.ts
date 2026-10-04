@@ -1,8 +1,8 @@
 import { describeRange, singlePeriod } from "./describe-range";
 
-function range(earliest: string | null, latest: string | null) {
+const range = (earliest: string | null, latest: string | null) => {
   return { earliest, latest };
-}
+};
 
 describe("describeRange", () => {
   it.each([

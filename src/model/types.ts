@@ -5,10 +5,12 @@ export type Place = {
   name: string;
 };
 
+export type CorrespondentKind = "person" | "organisation";
+
 export type Correspondent = {
   id: number;
   name: string;
-  kind: "person" | "organisation";
+  kind: CorrespondentKind;
 };
 
 export type DateSource = "dateline" | "postmark" | "endorsement" | "annotation" | "catalogue";

@@ -2,14 +2,14 @@ import { Layout } from "./layout";
 import { renderPage } from "../../../tests/support/render";
 import { CORRESPONDENTS_PATH, correspondentPath } from "../paths";
 
-function renderLayout(path: string, props: Partial<Parameters<typeof Layout>[0]> = {}) {
+const renderLayout = (path: string, props: Partial<Parameters<typeof Layout>[0]> = {}) => {
   return renderPage(
     <Layout title="Correspondents" description="People in the archive." section="correspondents" {...props}>
       <h1>Correspondents</h1>
     </Layout>,
     path,
   );
-}
+};
 
 describe("Layout", () => {
   it("sets the document language, title and description", () => {

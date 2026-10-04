@@ -38,14 +38,17 @@ describe("letterExcerpt", () => {
   });
 
   it("cuts a long line at a word boundary and adds an ellipsis", () => {
-    const longLine = `${"word ".repeat(40)}end`;
-    const excerpt = letterExcerpt(createLetter({ transcription: `Sir,\n${longLine}` }));
-    expect(excerpt.length).toBeLessThanOrEqual(141);
-    expect(excerpt).toMatch(/word…$/);
+    const transcription = [
+      "My dear Brother,",
+      "The thaw has come at last and the lane to the mill is a river. Mother bids me say the parcel arrived safe, though the jar of quince was broken in it.",
+    ].join("\n");
+    expect(letterExcerpt(createLetter({ transcription }))).toBe(
+      "The thaw has come at last and the lane to the mill is a river. Mother bids me say the parcel arrived safe, though the jar of quince was…",
+    );
   });
 
-  it("drops trailing punctuation before the ellipsis", () => {
-    const longLine = `${"a".repeat(130)} cut, here and then some more words`;
-    expect(letterExcerpt(createLetter({ transcription: `Sir,\n${longLine}` }))).toMatch(/ cut…$/);
+  it("drops a trailing comma before the ellipsis", () => {
+    const transcription = `Sir,\n${"x".repeat(124)} clause, continuing beyond the cut`;
+    expect(letterExcerpt(createLetter({ transcription }))).toBe(`${"x".repeat(124)} clause…`);
   });
 });

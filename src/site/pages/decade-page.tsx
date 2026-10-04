@@ -8,7 +8,7 @@ import type { DecadeSummary } from "../site-data";
 
 type DecadePageProps = { summary: DecadeSummary; previous: number | undefined; next: number | undefined };
 
-export function DecadePage({ summary, previous, next }: DecadePageProps) {
+export const DecadePage = ({ summary, previous, next }: DecadePageProps) => {
   const { decade, certain, possible } = summary;
   const label = decadeLabel(decade);
   return (
@@ -44,4 +44,4 @@ export function DecadePage({ summary, previous, next }: DecadePageProps) {
       />
     </Layout>
   );
-}
+};

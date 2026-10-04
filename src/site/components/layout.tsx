@@ -4,7 +4,7 @@ import { REPOSITORY_URL, SITE_NAME } from "../site-config";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { SiteLink, usePagePath } from "./page-path";
 
-export type Section = "letters" | "correspondents" | "decades";
+type Section = "letters" | "correspondents" | "decades";
 
 const NAV_ITEMS: readonly { label: string; path: string; section: Section }[] = [
   { label: "Letters", path: HOME_PATH, section: "letters" },
@@ -13,7 +13,7 @@ const NAV_ITEMS: readonly { label: string; path: string; section: Section }[] = 
 ];
 
 type LayoutProps = {
-  /** The page's own title; the site name is added. */
+  /** The page's own title. The site name is added to it. */
   title: string;
   description: string;
   section: Section;
@@ -21,7 +21,14 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-export function Layout({ title, description, section, breadcrumbs, children }: LayoutProps) {
+/** "page" on the section's own page, "true" elsewhere in the section. */
+const ariaCurrentFor = (item: (typeof NAV_ITEMS)[number], pagePath: string, section: Section) => {
+  if (item.path === pagePath) return "page";
+  if (item.section === section) return "true";
+  return undefined;
+};
+
+export const Layout = ({ title, description, section, breadcrumbs, children }: LayoutProps) => {
   const pagePath = usePagePath();
   return (
     <html lang="en-GB">
@@ -75,11 +82,4 @@ export function Layout({ title, description, section, breadcrumbs, children }: L
       </body>
     </html>
   );
-}
-
-/** "page" on the section's own page, "true" elsewhere in the section. */
-function ariaCurrentFor(item: (typeof NAV_ITEMS)[number], pagePath: string, section: Section) {
-  if (item.path === pagePath) return "page";
-  if (item.section === section) return "true";
-  return undefined;
-}
+};

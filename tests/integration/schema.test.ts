@@ -63,7 +63,7 @@ beforeEach(() => {
   `);
 });
 
-function insertLetter(changes: Partial<LetterRow> = {}): void {
+const insertLetter = (changes: Partial<LetterRow> = {}): void => {
   database
     .prepare(
       `INSERT INTO letters (id, sender_id, recipient_id, origin_id, destination_id,
@@ -72,18 +72,18 @@ function insertLetter(changes: Partial<LetterRow> = {}): void {
              @date_text, @date_source, @date_edtf, @date_earliest, @date_latest, @transcription)`,
     )
     .run({ ...validLetter, ...changes });
-}
+};
 
-function insertCorrespondent(name: unknown, kind: unknown): void {
+const insertCorrespondent = (name: unknown, kind: unknown): void => {
   database.prepare("INSERT INTO correspondents (name, kind) VALUES (?, ?)").run(name, kind);
-}
+};
 
-function insertPlace(name: unknown): void {
+const insertPlace = (name: unknown): void => {
   database.prepare("INSERT INTO places (name) VALUES (?)").run(name);
-}
+};
 
 /** Runs `action`, which should fail, and returns SQLite's error code. */
-function sqliteErrorCode(action: () => void): string {
+const sqliteErrorCode = (action: () => void): string => {
   try {
     action();
   } catch (error) {
@@ -91,7 +91,7 @@ function sqliteErrorCode(action: () => void): string {
     throw error;
   }
   throw new Error("Expected SQLite to reject this, but it was accepted.");
-}
+};
 
 it("makes every table STRICT, so values of the wrong type are rejected", () => {
   const tablesNotStrict = database
@@ -221,9 +221,9 @@ describe("letters", () => {
 
   describe.each(["date_earliest", "date_latest"])("%s", (column) => {
     // The other bound is left empty so the earliest <= latest rule can't interfere.
-    function onlyThisBound(date: string) {
+    const onlyThisBound = (date: string) => {
       return { date_earliest: null, date_latest: null, [column]: date };
-    }
+    };
 
     it.each(["1821-03-14", "1840-02-29"])("accepts the real date %s", (date) => {
       expect(() => insertLetter(onlyThisBound(date))).not.toThrow();

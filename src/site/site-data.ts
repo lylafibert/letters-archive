@@ -9,17 +9,19 @@ export type DecadeSummary = { decade: number; certain: Letter[]; possible: Lette
 
 const nameCollator = new Intl.Collator("en-GB");
 
+const getOrCreate = <Key, Value>(map: Map<Key, Value>, key: Key, create: () => Value): Value => {
+  const existing = map.get(key);
+  if (existing) return existing;
+  const created = create();
+  map.set(key, created);
+  return created;
+};
+
 /** Everyone who sent or received a letter, by name. Letters keep their given order. */
-export function summariseCorrespondents(letters: readonly Letter[]): CorrespondentSummary[] {
+export const summariseCorrespondents = (letters: readonly Letter[]): CorrespondentSummary[] => {
   const summaries = new Map<number, CorrespondentSummary>();
-  function summaryFor(correspondent: Correspondent): CorrespondentSummary {
-    let summary = summaries.get(correspondent.id);
-    if (!summary) {
-      summary = { correspondent, sent: [], received: [] };
-      summaries.set(correspondent.id, summary);
-    }
-    return summary;
-  }
+  const summaryFor = (correspondent: Correspondent): CorrespondentSummary =>
+    getOrCreate(summaries, correspondent.id, () => ({ correspondent, sent: [], received: [] }));
 
   for (const letter of letters) {
     summaryFor(letter.sender).sent.push(letter);
@@ -28,21 +30,18 @@ export function summariseCorrespondents(letters: readonly Letter[]): Corresponde
   return [...summaries.values()].sort((first, second) =>
     nameCollator.compare(first.correspondent.name, second.correspondent.name),
   );
-}
+};
 
 /** Every decade any letter may belong to, in order. Letters keep their given order. */
-export function summariseDecades(letters: readonly Letter[]): DecadeSummary[] {
+export const summariseDecades = (letters: readonly Letter[]): DecadeSummary[] => {
   const summaries = new Map<number, DecadeSummary>();
   for (const letter of letters) {
     const range = letterDateRange(letter);
     for (const decade of decadesOverlapping(range)) {
-      let summary = summaries.get(decade);
-      if (!summary) {
-        summary = { decade, certain: [], possible: [] };
-        summaries.set(decade, summary);
-      }
-      (isCertainlyWithinDecade(range, decade) ? summary.certain : summary.possible).push(letter);
+      const summary = getOrCreate(summaries, decade, () => ({ decade, certain: [], possible: [] }));
+      if (isCertainlyWithinDecade(range, decade)) summary.certain.push(letter);
+      else summary.possible.push(letter);
     }
   }
   return [...summaries.values()].sort((first, second) => first.decade - second.decade);
-}
+};

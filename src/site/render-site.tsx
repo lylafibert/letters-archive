@@ -24,8 +24,21 @@ import { summariseCorrespondents, summariseDecades } from "./site-data";
 /** A file to write, relative to the output directory. */
 export type SiteFile = { path: string; contents: string };
 
+/** Two pages with the same path (e.g. correspondents with the same name) would overwrite each other. */
+const assertUniquePaths = (files: readonly SiteFile[]): void => {
+  const seen = new Set<string>();
+  for (const { path } of files) {
+    if (seen.has(path)) throw new Error(`Two pages would be written to ${path}`);
+    seen.add(path);
+  }
+};
+
+export const renderDocument = (pagePath: string, page: ReactElement): string => {
+  return `<!DOCTYPE html>\n${renderToStaticMarkup(<PagePathProvider path={pagePath}>{page}</PagePathProvider>)}\n`;
+};
+
 /** Every page and data file of the site, from letters in date order. */
-export function renderSite(letters: readonly Letter[]): SiteFile[] {
+export const renderSite = (letters: readonly Letter[]): SiteFile[] => {
   const correspondents = summariseCorrespondents(letters);
   const decadeSummaries = summariseDecades(letters);
   const decades = decadeSummaries.map((summary) => summary.decade);
@@ -57,17 +70,4 @@ export function renderSite(letters: readonly Letter[]): SiteFile[] {
   ];
   assertUniquePaths(files);
   return files;
-}
-
-export function renderDocument(pagePath: string, page: ReactElement): string {
-  return `<!DOCTYPE html>\n${renderToStaticMarkup(<PagePathProvider path={pagePath}>{page}</PagePathProvider>)}\n`;
-}
-
-/** Two pages with the same path (e.g. correspondents with the same name) would overwrite each other. */
-function assertUniquePaths(files: readonly SiteFile[]): void {
-  const seen = new Set<string>();
-  for (const { path } of files) {
-    if (seen.has(path)) throw new Error(`Two pages would be written to ${path}`);
-    seen.add(path);
-  }
-}
+};

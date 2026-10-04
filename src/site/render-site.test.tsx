@@ -1,4 +1,5 @@
 import { createCorrespondent, createLetter } from "../../tests/fixtures/letters";
+import { parseJsonIndex } from "../../tests/support/json-index";
 import { renderSite } from "./render-site";
 
 describe("renderSite", () => {
@@ -29,7 +30,8 @@ describe("renderSite", () => {
 
   it("includes every letter in the JSON index", () => {
     const jsonIndex = renderSite(letters).find((file) => file.path === "letters.json");
-    expect(JSON.parse(jsonIndex?.contents ?? "{}").letters).toHaveLength(2);
+    expect(jsonIndex).toBeDefined();
+    expect(parseJsonIndex(jsonIndex!.contents).letters).toHaveLength(2);
   });
 
   it("refuses to write two pages to the same path", () => {

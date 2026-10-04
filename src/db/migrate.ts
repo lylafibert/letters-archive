@@ -4,19 +4,19 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 export const DEFAULT_DATABASE_PATH = fileURLToPath(new URL("../../data/archive.sqlite", import.meta.url));
-export const DEFAULT_MIGRATIONS_DIR = fileURLToPath(new URL("./migrations/", import.meta.url));
+const DEFAULT_MIGRATIONS_DIR = fileURLToPath(new URL("./migrations/", import.meta.url));
 
-/** Matches `NNNN_description.sql`; the four digits are the schema version. */
+/** Matches `NNNN_description.sql`, where the four digits are the schema version. */
 const MIGRATION_FILE_NAME = /^(\d{4})_.+\.sql$/;
 
-export function openDatabase(
+export const openDatabase = (
   databasePath: string = DEFAULT_DATABASE_PATH,
   options: Database.Options = {},
-): Database.Database {
+): Database.Database => {
   const database = new Database(databasePath, options);
   database.pragma("foreign_keys = ON");
   return database;
-}
+};
 
 /**
  * Applies migrations named `NNNN_description.sql` in numeric order.
@@ -24,7 +24,7 @@ export function openDatabase(
  * so each file runs exactly once. Each migration runs in its own transaction.
  * Returns the file names of the migrations that were applied.
  */
-export function migrate(database: Database.Database, migrationsDir: string = DEFAULT_MIGRATIONS_DIR): string[] {
+export const migrate = (database: Database.Database, migrationsDir: string = DEFAULT_MIGRATIONS_DIR): string[] => {
   const currentVersion = database.pragma("user_version", { simple: true }) as number;
   const migrationFileNames = readdirSync(migrationsDir)
     .filter((fileName) => MIGRATION_FILE_NAME.test(fileName))
@@ -42,7 +42,7 @@ export function migrate(database: Database.Database, migrationsDir: string = DEF
     appliedFileNames.push(fileName);
   }
   return appliedFileNames;
-}
+};
 
 if (import.meta.main) {
   const database = openDatabase();
