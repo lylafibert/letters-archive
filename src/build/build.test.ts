@@ -1,4 +1,4 @@
-import { renderIndexPage } from "./build.js";
+import { renderIndexPage } from "./build";
 
 describe("renderIndexPage", () => {
   it("renders a valid HTML document with a language and a heading", () => {

@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const OUT_DIR = fileURLToPath(new URL("../../dist/", import.meta.url));
+const DEFAULT_OUTPUT_DIR = fileURLToPath(new URL("../../dist/", import.meta.url));
 
 export function renderIndexPage(): string {
   return `<!doctype html>
@@ -22,13 +22,12 @@ export function renderIndexPage(): string {
 `;
 }
 
-export async function build(outDir: string = OUT_DIR): Promise<void> {
-  await mkdir(outDir, { recursive: true });
-  await writeFile(path.join(outDir, "index.html"), renderIndexPage(), "utf8");
-  console.log(`Built site to ${outDir}`);
+export async function buildSite(outputDir: string = DEFAULT_OUTPUT_DIR): Promise<void> {
+  await mkdir(outputDir, { recursive: true });
+  await writeFile(path.join(outputDir, "index.html"), renderIndexPage(), "utf8");
+  console.log(`Built site to ${outputDir}`);
 }
 
-// Run only when invoked directly (not when imported by tests).
-if (import.meta.url === `file://${process.argv[1]}`) {
-  await build();
+if (import.meta.main) {
+  await buildSite();
 }

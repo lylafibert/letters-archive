@@ -1,10 +1,10 @@
-import { InvalidEdtfError, edtfToRange } from "./edtf-to-range.js";
+import { InvalidEdtfError, edtfToRange } from "./edtf-to-range";
 
 function range(earliest: string | null, latest: string | null) {
   return { earliest, latest };
 }
 
-const SUPPORTED_INPUTS = [
+const VALID_EDTF_INPUTS = [
   "1821-03-14",
   "1843",
   "1844-02",
@@ -144,19 +144,19 @@ describe("edtfToRange", () => {
   });
 
   describe("for every supported input", () => {
-    function isRealDay(value: string) {
+    function isValidIsoDate(value: string) {
       return /^\d{4}-\d{2}-\d{2}$/.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
     }
 
-    it.each(SUPPORTED_INPUTS)("returns bounds that are null or valid YYYY-MM-DD dates for '%s'", (input) => {
+    it.each(VALID_EDTF_INPUTS)("returns bounds that are null or valid YYYY-MM-DD dates for '%s'", (input) => {
       const { earliest, latest } = edtfToRange(input);
       for (const bound of [earliest, latest]) {
-        if (bound !== null) expect(isRealDay(bound)).toBe(true);
+        if (bound !== null) expect(isValidIsoDate(bound)).toBe(true);
         else expect(bound).toBeNull();
       }
     });
 
-    it.each(SUPPORTED_INPUTS)("returns an earliest date no later than the latest date for '%s'", (input) => {
+    it.each(VALID_EDTF_INPUTS)("returns an earliest date no later than the latest date for '%s'", (input) => {
       const { earliest, latest } = edtfToRange(input);
       if (earliest !== null && latest !== null) expect(earliest <= latest).toBe(true);
       else expect([earliest, latest]).toContain(null);

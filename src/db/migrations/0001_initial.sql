@@ -22,7 +22,7 @@ CREATE TABLE letters (
   -- IS, not =: date() returns NULL for bad input, and a NULL CHECK passes.
   date_earliest  TEXT CHECK (date(date_earliest) IS date_earliest),
   date_latest    TEXT CHECK (date(date_latest) IS date_latest),
-  content        TEXT NOT NULL CHECK (content <> ''),
+  transcription  TEXT NOT NULL CHECK (transcription <> ''),
   CHECK ((date_text IS NULL) = (date_source IS NULL)),
   -- A range needs an EDTF value to come from. Not the reverse: '../..' has no bounds.
   CHECK (date_edtf IS NOT NULL OR (date_earliest IS NULL AND date_latest IS NULL)),

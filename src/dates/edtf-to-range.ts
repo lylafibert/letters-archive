@@ -19,9 +19,16 @@ import {
   isEDTFDate,
   parse,
   type EDTFBase,
+  type Precision,
   type TemporalBound,
 } from "@edtf-ts/core";
-import { endOf, shift, startOf, type Day, type Unit } from "./calendar-day.js";
+import {
+  addUnits,
+  endOf,
+  startOf,
+  type CalendarDate,
+  type DateUnit,
+} from "./calendar-date";
 
 export type DateRange = {
   earliest: string | null; // "YYYY-MM-DD", inclusive; null = open-ended
@@ -33,52 +40,59 @@ export class InvalidEdtfError extends Error {
 }
 
 export function edtfToRange(edtf: string): DateRange {
-  const result = parse(edtf);
-  if (!result.success) {
-    const reason = result.errors.map((error) => error.message).join("; ");
+  const parseResult = parse(edtf);
+  if (!parseResult.success) {
+    const reason = parseResult.errors.map((error) => error.message).join("; ");
     throw new InvalidEdtfError(`Invalid EDTF date "${edtf}": ${reason}`);
   }
 
-  const { value } = result;
-  const { earliest, latest } = getBounds(value);
-  const margin = qualifierMargin(value);
-  const unit = toUnit(value.precision);
-
-  const earliestDay = finiteDay(earliest);
-  const latestDay = finiteDay(latest);
+  const parsed = parseResult.value;
+  const bounds = getBounds(parsed);
+  const earliestDate = finiteDate(bounds.earliest);
+  const latestDate = finiteDate(bounds.latest);
+  const margin = qualifierMargin(parsed);
+  const unit = precisionUnit(parsed.precision);
 
   if (margin === 0 || unit === undefined) {
-    return { earliest: toIsoDate(earliestDay), latest: toIsoDate(latestDay) };
+    return { earliest: toIsoDate(earliestDate), latest: toIsoDate(latestDate) };
   }
 
   // Widen by `margin` whole units: back from the start of the first unit,
   // forward to the end of the last.
   return {
-    earliest: toIsoDate(earliestDay && shift(startOf(earliestDay, unit), unit, -margin)),
-    latest: toIsoDate(latestDay && endOf(shift(startOf(latestDay, unit), unit, margin), unit)),
+    earliest: toIsoDate(
+      earliestDate && addUnits(startOf(earliestDate, unit), unit, -margin),
+    ),
+    latest: toIsoDate(
+      latestDate &&
+        endOf(addUnits(startOf(latestDate, unit), unit, margin), unit),
+    ),
   };
 }
 
-function qualifierMargin(value: EDTFBase): number {
-  if (!isEDTFDate(value)) return 0;
-  const q = value.qualification;
-  if (q?.uncertainApproximate) return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
-  if (q?.approximate) return Number(APPROXIMATE_MULTIPLIER);
-  if (q?.uncertain) return Number(UNCERTAIN_MULTIPLIER);
+/** How many units of its precision a qualified single date is widened by. */
+function qualifierMargin(parsed: EDTFBase): number {
+  if (!isEDTFDate(parsed)) return 0;
+  const qualification = parsed.qualification;
+  if (qualification?.uncertainApproximate)
+    return Number(UNCERTAIN_APPROXIMATE_MULTIPLIER);
+  if (qualification?.approximate) return Number(APPROXIMATE_MULTIPLIER);
+  if (qualification?.uncertain) return Number(UNCERTAIN_MULTIPLIER);
   return 0;
 }
 
-function toUnit(precision: EDTFBase["precision"]): Unit | undefined {
+/** The calendar unit of a precision, or undefined for precisions that can't be widened (e.g. seasons). */
+function precisionUnit(precision: Precision): DateUnit | undefined {
   return precision === "year" || precision === "month" || precision === "day"
     ? precision
     : undefined;
 }
 
-/** The bound's day, or null when it is open or unknown. */
-function finiteDay(bound: TemporalBound): Day | null {
+/** The bound's date, or null when it is open or unknown. */
+function finiteDate(bound: TemporalBound): CalendarDate | null {
   return bound.kind === "finite" ? bound.date : null;
 }
 
-function toIsoDate(day: Day | null): string | null {
-  return day && formatCalendarDate(day);
+function toIsoDate(date: CalendarDate | null): string | null {
+  return date && formatCalendarDate(date);
 }
