@@ -1,2 +1,1 @@
 -- Placeholder: initial schema (letters, people, places).
--- Authored by the project owner, not AI-generated.
