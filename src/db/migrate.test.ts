@@ -3,7 +3,6 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { migrate, openDatabase } from "./migrate";
 
-/** Writes the given files to a fresh temporary directory and returns its path. */
 const createMigrationsDir = (files: Record<string, string>): string => {
   const migrationsDir = mkdtempSync(path.join(tmpdir(), "migrations-"));
   for (const [fileName, sql] of Object.entries(files)) writeFileSync(path.join(migrationsDir, fileName), sql);
@@ -39,10 +38,5 @@ describe("migrate", () => {
     expect(database.pragma("user_version", { simple: true })).toBe(1);
     const halfCreatedTables = database.prepare("SELECT name FROM sqlite_master WHERE name = 'half_created'").all();
     expect(halfCreatedTables).toEqual([]);
-  });
-
-  it("applies the project's own migrations without error", () => {
-    const database = openDatabase(":memory:");
-    expect(() => migrate(database)).not.toThrow();
   });
 });

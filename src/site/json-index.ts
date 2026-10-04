@@ -24,7 +24,7 @@ const toJsonLetter = (letter: Letter) => {
 export type JsonLetter = ReturnType<typeof toJsonLetter>;
 export type JsonIndex = { letters: JsonLetter[] };
 
-/** The whole archive as JSON, for reuse outside the site. Paths are relative to the site root. */
+/** Letter paths are relative to the site root. */
 export const renderJsonIndex = (letters: readonly Letter[]): string => {
   const index: JsonIndex = { letters: letters.map(toJsonLetter) };
   return `${JSON.stringify(index, null, 2)}\n`;

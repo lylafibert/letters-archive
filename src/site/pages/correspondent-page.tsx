@@ -7,7 +7,7 @@ import type { CorrespondentSummary } from "../site-data";
 
 const LetterSection = ({ id, heading, letters }: { id: string; heading: string; letters: readonly Letter[] }) => {
   return (
-    <section aria-labelledby={id}>
+    <section aria-labelledby={id} className="section">
       <h2 id={id}>{heading}</h2>
       {letters.length > 0 ? <LetterList letters={letters} /> : <p className="empty">None in the archive.</p>}
     </section>

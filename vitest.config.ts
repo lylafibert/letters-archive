@@ -2,10 +2,10 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    // describe/it/expect/beforeEach etc. are available without importing.
     globals: true,
     // A test with no assertions fails instead of passing silently.
     expect: { requireAssertions: true },
+    restoreMocks: true,
     projects: [
       {
         extends: true,

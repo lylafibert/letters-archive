@@ -14,10 +14,19 @@ const renderLetterPage = (
 };
 
 describe("LetterPage", () => {
-  it("titles the page with the reference, sender and recipient", () => {
+  it("titles the page with the sender, recipient, date and reference", () => {
     const page = renderLetterPage();
-    expect(page.getByRole("heading", { level: 1 })).toHaveTextContent("Eliza Marrable to Thomas Marrable");
-    expect(document.title).toBe("MAR/001: Eliza Marrable to Thomas Marrable · Letters Archive");
+    expect(page.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Eliza Marrable to Thomas Marrable, 14 March 1821",
+    );
+    expect(document.title).toBe("Eliza Marrable to Thomas Marrable, 14 March 1821 (MAR/001) · Letters Archive");
+  });
+
+  it("offers a citation with the letter's permanent URL", () => {
+    const page = renderLetterPage();
+    expect(page.getByRole("region", { name: "Cite this letter" })).toHaveTextContent(
+      "Eliza Marrable to Thomas Marrable, 14 March 1821. Letters Archive, MAR/001. https://lylafibert.github.io/letters-archive/letters/mar-001/",
+    );
   });
 
   it("links the sender and recipient to their pages", () => {
@@ -45,7 +54,7 @@ describe("LetterPage", () => {
     expect(descriptionFor(document.body, "Sent to")).toHaveTextContent("Unknown");
   });
 
-  it("shows the date as a range, as found in the source, and as EDTF", () => {
+  it("shows the date as a range, in the source's words, and where it was found", () => {
     renderLetterPage(
       createLetter({
         dateText: "c. 1820",
@@ -56,8 +65,8 @@ describe("LetterPage", () => {
       }),
     );
     expect(descriptionFor(document.body, "Date")).toHaveTextContent("1818–1822");
-    expect(descriptionFor(document.body, "Date as found")).toHaveTextContent("“c. 1820”, from the archive catalogue");
-    expect(descriptionFor(document.body, "Machine-readable date (EDTF)")).toHaveTextContent("1820~");
+    expect(descriptionFor(document.body, "Date as found")).toHaveTextContent("c. 1820");
+    expect(descriptionFor(document.body, "Found in")).toHaveTextContent("Archive catalogue");
   });
 
   it("says when a letter is undated", () => {
@@ -66,6 +75,7 @@ describe("LetterPage", () => {
     );
     expect(descriptionFor(document.body, "Date")).toHaveTextContent("Undated");
     expect(descriptionFor(document.body, "Date as found")).toHaveTextContent("None");
+    expect([...document.querySelectorAll("dt")].map((term) => term.textContent)).not.toContain("Found in");
     expect(page.queryByText(/^Decades?$/, { selector: "dt" })).not.toBeInTheDocument();
   });
 

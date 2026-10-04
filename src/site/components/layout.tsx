@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  ABOUT_PATH,
   CORRESPONDENTS_PATH,
   DECADES_PATH,
   FAVICON_PATH,
@@ -12,12 +13,13 @@ import { REPOSITORY_URL, SITE_NAME } from "../site-config";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { SiteLink, usePagePath } from "./page-path";
 
-type Section = "letters" | "correspondents" | "decades";
+type Section = "letters" | "correspondents" | "decades" | "about";
 
 const NAV_ITEMS: readonly { label: string; path: string; section: Section }[] = [
   { label: "Letters", path: HOME_PATH, section: "letters" },
   { label: "Correspondents", path: CORRESPONDENTS_PATH, section: "correspondents" },
   { label: "Decades", path: DECADES_PATH, section: "decades" },
+  { label: "About", path: ABOUT_PATH, section: "about" },
 ];
 
 type LayoutProps = {

@@ -2,7 +2,7 @@ import { SiteLink } from "./page-path";
 
 export type PagerLink = { path: string; title: string };
 
-/** Links to the previous and next pages in a sequence. Renders nothing if there are neither. */
+/** Renders nothing when there is neither a previous nor a next page. */
 export const Pager = ({
   label,
   previous,

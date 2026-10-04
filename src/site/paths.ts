@@ -4,6 +4,7 @@
 export const HOME_PATH = "";
 export const CORRESPONDENTS_PATH = "correspondents/";
 export const DECADES_PATH = "decades/";
+export const ABOUT_PATH = "about/";
 export const JSON_INDEX_PATH = "letters.json";
 export const STYLESHEET_PATH = "styles.css";
 export const FAVICON_PATH = "favicon.svg";

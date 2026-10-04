@@ -1,5 +1,13 @@
 import { createLetter } from "../../tests/fixtures/letters";
-import { letterDateRange, letterExcerpt, letterTitle, transcriptionLines } from "./letter-details";
+import {
+  letterCitation,
+  letterDateRange,
+  letterExcerpt,
+  letterTitle,
+  letterTitleWithDate,
+  sourceWording,
+  transcriptionLines,
+} from "./letter-details";
 
 describe("letterTitle", () => {
   it("names the sender and recipient", () => {
@@ -8,6 +16,40 @@ describe("letterTitle", () => {
 
   it("describes a missing recipient as unknown", () => {
     expect(letterTitle(createLetter({ recipient: null }))).toBe("Eliza Marrable to an unknown recipient");
+  });
+});
+
+describe("letterTitleWithDate", () => {
+  it("adds the date to the title", () => {
+    expect(letterTitleWithDate(createLetter())).toBe("Eliza Marrable to Thomas Marrable, 14 March 1821");
+  });
+
+  it("says when a letter is undated", () => {
+    const undated = createLetter({ dateEarliest: null, dateLatest: null });
+    expect(letterTitleWithDate(undated)).toBe("Eliza Marrable to Thomas Marrable, undated");
+  });
+});
+
+describe("sourceWording", () => {
+  it("returns the source's wording when it differs from the range", () => {
+    const circa = createLetter({ dateText: "c. 1820", dateEarliest: "1818-01-01", dateLatest: "1822-12-31" });
+    expect(sourceWording(circa)).toBe("c. 1820");
+  });
+
+  it("returns nothing when the wording only adds an ordinal to the range", () => {
+    expect(sourceWording(createLetter({ dateText: "14th March 1821" }))).toBeNull();
+  });
+
+  it("returns nothing when the source gives no date", () => {
+    expect(sourceWording(createLetter({ dateText: null, dateSource: null }))).toBeNull();
+  });
+});
+
+describe("letterCitation", () => {
+  it("cites the title, date, archive, reference and permanent URL", () => {
+    expect(letterCitation(createLetter())).toBe(
+      "Eliza Marrable to Thomas Marrable, 14 March 1821. Letters Archive, MAR/001. https://lylafibert.github.io/letters-archive/letters/mar-001/",
+    );
   });
 });
 

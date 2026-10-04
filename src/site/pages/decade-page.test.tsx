@@ -9,9 +9,10 @@ const renderDecadePage = (possible = [createLetter({ id: "FER/002" })]) => {
 };
 
 describe("DecadePage", () => {
-  it("names the decade", () => {
+  it("names the decade and summarises its letters", () => {
     const page = renderDecadePage();
     expect(page.getByRole("heading", { level: 1 })).toHaveTextContent("The 1830s");
+    expect(page.getByText("1 letter, plus 1 that may be from this decade.")).toBeInTheDocument();
   });
 
   it("separates letters dated within the decade from those possibly within it", () => {

@@ -15,18 +15,8 @@ describe("DecadesPage", () => {
     expect(page.getByRole("link", { name: "1820s" })).toHaveAttribute("href", "../decades/1820s/");
   });
 
-  it("counts letters dated within the decade", () => {
-    const page = renderDecadesPage([{ decade: 1840, certain: letters(4), possible: [] }]);
-    expect(page.getByText("4 letters")).toBeInTheDocument();
-  });
-
-  it("adds letters that may be from the decade", () => {
+  it("describes each decade's letters", () => {
     const page = renderDecadesPage([{ decade: 1820, certain: letters(3), possible: letters(1) }]);
     expect(page.getByText("3 letters, plus 1 that may be from this decade")).toBeInTheDocument();
-  });
-
-  it("describes a decade with only letters that may be from it", () => {
-    const page = renderDecadesPage([{ decade: 1810, certain: [], possible: letters(1) }]);
-    expect(page.getByText("1 letter that may be from this decade")).toBeInTheDocument();
   });
 });

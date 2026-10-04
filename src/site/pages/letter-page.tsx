@@ -5,7 +5,14 @@ import { Layout } from "../components/layout";
 import { SiteLink } from "../components/page-path";
 import { Pager } from "../components/pager";
 import { DATE_SOURCE_LABELS } from "../labels";
-import { letterDateRange, letterExcerpt, letterTitle, transcriptionLines } from "../letter-details";
+import {
+  letterCitation,
+  letterDateRange,
+  letterExcerpt,
+  letterTitle,
+  letterTitleWithDate,
+  transcriptionLines,
+} from "../letter-details";
 import { HOME_PATH, correspondentPath, decadePath, letterPath } from "../paths";
 
 type LetterPageProps = { letter: Letter; previous: Letter | undefined; next: Letter | undefined };
@@ -24,14 +31,20 @@ export const LetterPage = ({ letter, previous, next }: LetterPageProps) => {
   const decades = decadesOverlapping(range);
   return (
     <Layout
-      title={`${letter.id}: ${title}`}
+      title={`${letterTitleWithDate(letter)} (${letter.id})`}
       description={letterExcerpt(letter)}
       section="letters"
       breadcrumbs={[{ label: "Letters", path: HOME_PATH }, { label: letter.id }]}
     >
       <header className="page-header">
         <p className="eyebrow">Letter {letter.id}</p>
-        <h1>{title}</h1>
+        <h1>
+          {title}
+          <span className="visually-hidden">, </span>
+          <span className="page-header__date">
+            <DateRangeText range={range} />
+          </span>
+        </h1>
       </header>
       <div className="letter-layout">
         <section aria-labelledby="details" className="letter-details">
@@ -53,16 +66,18 @@ export const LetterPage = ({ letter, previous, next }: LetterPageProps) => {
             </dd>
             <dt>Date as found</dt>
             <dd>
-              {letter.dateText && letter.dateSource ? (
-                <>
-                  “{letter.dateText}”, from {DATE_SOURCE_LABELS[letter.dateSource]}
-                </>
+              {letter.dateText ? (
+                <span className="source-wording">{letter.dateText}</span>
               ) : (
                 <MissingValue>None</MissingValue>
               )}
             </dd>
-            <dt>Machine-readable date (EDTF)</dt>
-            <dd>{letter.dateEdtf ? <code>{letter.dateEdtf}</code> : <MissingValue>None</MissingValue>}</dd>
+            {letter.dateSource && (
+              <>
+                <dt>Found in</dt>
+                <dd>{DATE_SOURCE_LABELS[letter.dateSource]}</dd>
+              </>
+            )}
             {decades.length > 0 && (
               <>
                 <dt>{decades.length === 1 ? "Decade" : "Decades"}</dt>
@@ -79,19 +94,25 @@ export const LetterPage = ({ letter, previous, next }: LetterPageProps) => {
             )}
           </dl>
         </section>
-        <section aria-labelledby="transcription" className="letter-transcription">
-          <h2 id="transcription">Transcription</h2>
-          <div className="transcription">
-            {transcriptionLines(letter).map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
-        </section>
+        <div className="letter-main">
+          <section aria-labelledby="transcription" className="letter-transcription">
+            <h2 id="transcription">Transcription</h2>
+            <div className="transcription">
+              {transcriptionLines(letter).map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+          </section>
+          <section aria-labelledby="cite" className="citation">
+            <h2 id="cite">Cite this letter</h2>
+            <p>{letterCitation(letter)}</p>
+          </section>
+        </div>
       </div>
       <Pager
         label="Previous and next letters"
-        previous={previous && { path: letterPath(previous.id), title: letterTitle(previous) }}
-        next={next && { path: letterPath(next.id), title: letterTitle(next) }}
+        previous={previous && { path: letterPath(previous.id), title: letterTitleWithDate(previous) }}
+        next={next && { path: letterPath(next.id), title: letterTitleWithDate(next) }}
       />
     </Layout>
   );

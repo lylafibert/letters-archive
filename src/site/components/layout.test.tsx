@@ -46,6 +46,17 @@ describe("Layout", () => {
     expect(navigation.querySelector('[aria-current="page"]')).toHaveTextContent("Correspondents");
   });
 
+  it("links to every section from the main navigation", () => {
+    const page = renderLayout(CORRESPONDENTS_PATH);
+    const navigation = page.getByRole("navigation", { name: "Main" });
+    expect([...navigation.querySelectorAll("a")].map((link) => link.textContent)).toEqual([
+      "Letters",
+      "Correspondents",
+      "Decades",
+      "About",
+    ]);
+  });
+
   it("marks the current section on pages within it", () => {
     const page = renderLayout(correspondentPath("Eliza Marrable"));
     expect(page.getByRole("link", { name: "Correspondents" })).toHaveAttribute("aria-current", "true");

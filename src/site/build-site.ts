@@ -12,7 +12,7 @@ const FAVICON_SOURCE = fileURLToPath(new URL("./favicon.svg", import.meta.url));
 
 type BuildOptions = { databasePath?: string; outputDir?: string };
 
-/** Reads the archive from the database and writes the static site, replacing any previous build. */
+/** Replaces any previous build in `outputDir`. */
 export const buildSite = async ({
   databasePath = DEFAULT_DATABASE_PATH,
   outputDir = DEFAULT_OUTPUT_DIR,

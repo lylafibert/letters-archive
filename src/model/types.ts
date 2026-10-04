@@ -1,5 +1,3 @@
-// Domain model for the letters archive, written as TypeScript types.
-
 export type Place = {
   id: number;
   name: string;

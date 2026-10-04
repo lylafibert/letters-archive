@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Letter } from "../model/types";
 import { PagePathProvider } from "./components/page-path";
 import { renderJsonIndex } from "./json-index";
+import { AboutPage } from "./pages/about-page";
 import { CorrespondentPage } from "./pages/correspondent-page";
 import { CorrespondentsPage } from "./pages/correspondents-page";
 import { DecadePage } from "./pages/decade-page";
@@ -10,6 +11,7 @@ import { DecadesPage } from "./pages/decades-page";
 import { HomePage } from "./pages/home-page";
 import { LetterPage } from "./pages/letter-page";
 import {
+  ABOUT_PATH,
   CORRESPONDENTS_PATH,
   DECADES_PATH,
   HOME_PATH,
@@ -21,7 +23,7 @@ import {
 } from "./paths";
 import { summariseCorrespondents, summariseDecades } from "./site-data";
 
-/** A file to write, relative to the output directory. */
+/** `path` is relative to the output directory. */
 export type SiteFile = { path: string; contents: string };
 
 /** Two pages with the same path (e.g. correspondents with the same name) would overwrite each other. */
@@ -37,7 +39,7 @@ export const renderDocument = (pagePath: string, page: ReactElement): string => 
   return `<!DOCTYPE html>\n${renderToStaticMarkup(<PagePathProvider path={pagePath}>{page}</PagePathProvider>)}\n`;
 };
 
-/** Every page and data file of the site, from letters in date order. */
+/** Expects letters in date order, which sets the order of every list and the previous and next links. */
 export const renderSite = (letters: readonly Letter[]): SiteFile[] => {
   const correspondents = summariseCorrespondents(letters);
   const decadeSummaries = summariseDecades(letters);
@@ -62,6 +64,7 @@ export const renderSite = (letters: readonly Letter[]): SiteFile[] => {
       path: decadePath(summary.decade),
       element: <DecadePage summary={summary} previous={decades[index - 1]} next={decades[index + 1]} />,
     })),
+    { path: ABOUT_PATH, element: <AboutPage letterCount={letters.length} /> },
   ];
 
   const files = [

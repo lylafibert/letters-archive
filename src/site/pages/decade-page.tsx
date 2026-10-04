@@ -2,7 +2,7 @@ import { decadeLabel } from "../../dates/decades";
 import { Layout } from "../components/layout";
 import { LetterList } from "../components/letter-list";
 import { Pager } from "../components/pager";
-import { countLabel } from "../labels";
+import { decadeCountLabel } from "../labels";
 import { DECADES_PATH, decadePath } from "../paths";
 import type { DecadeSummary } from "../site-data";
 
@@ -20,17 +20,14 @@ export const DecadePage = ({ summary, previous, next }: DecadePageProps) => {
     >
       <header className="page-header">
         <h1>The {label}</h1>
-        <p className="lede">
-          {countLabel(certain.length, "letter")} dated within the decade, and {countLabel(possible.length, "letter")}{" "}
-          whose date range extends beyond it.
-        </p>
+        <p className="lede">{decadeCountLabel(summary)}.</p>
       </header>
-      <section aria-labelledby="certain">
+      <section aria-labelledby="certain" className="section">
         <h2 id="certain">Dated within the {label}</h2>
         {certain.length > 0 ? <LetterList letters={certain} /> : <p className="empty">None.</p>}
       </section>
       {possible.length > 0 && (
-        <section aria-labelledby="possible">
+        <section aria-labelledby="possible" className="section">
           <h2 id="possible">Possibly from the {label}</h2>
           <LetterList letters={possible} />
         </section>

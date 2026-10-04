@@ -30,6 +30,21 @@ describe("LetterList", () => {
     expect(screen.getByText("Reference")).toHaveClass("visually-hidden");
   });
 
+  it("shows the source's wording of an uncertain date next to its range", () => {
+    renderAtPath(
+      <LetterList
+        letters={[createLetter({ dateText: "c. 1820", dateEarliest: "1818-01-01", dateLatest: "1822-12-31" })]}
+      />,
+    );
+    expect(screen.getByText("1818–1822")).toBeInTheDocument();
+    expect(screen.getByText("c. 1820")).toBeInTheDocument();
+  });
+
+  it("leaves out the source's wording when it says the same as the range", () => {
+    renderAtPath(<LetterList letters={[createLetter({ dateText: "14th March 1821" })]} />);
+    expect(screen.queryByText("Date as found")).not.toBeInTheDocument();
+  });
+
   it("leaves out the place when it is not recorded", () => {
     renderAtPath(<LetterList letters={[createLetter({ origin: null })]} />);
     expect(screen.queryByText("Written at")).not.toBeInTheDocument();

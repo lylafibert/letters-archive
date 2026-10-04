@@ -1,7 +1,7 @@
 import { createContext, useContext, type ComponentProps, type ReactNode } from "react";
-import { HOME_PATH, relativeHref } from "../paths";
+import { relativeHref } from "../paths";
 
-const PagePathContext = createContext(HOME_PATH);
+const PagePathContext = createContext<string | null>(null);
 
 /** Tells links which page they are on, so they can be made relative. */
 export const PagePathProvider = ({ path, children }: { path: string; children: ReactNode }) => {
@@ -9,7 +9,9 @@ export const PagePathProvider = ({ path, children }: { path: string; children: R
 };
 
 export const usePagePath = (): string => {
-  return useContext(PagePathContext);
+  const pagePath = useContext(PagePathContext);
+  if (pagePath === null) throw new Error("usePagePath must be used inside a PagePathProvider");
+  return pagePath;
 };
 
 /** A link to a site path, relative to the current page. */

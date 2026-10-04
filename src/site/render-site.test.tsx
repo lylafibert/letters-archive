@@ -8,7 +8,7 @@ describe("renderSite", () => {
     createLetter({ id: "MAR/002", dateEarliest: "1818-01-01", dateLatest: "1822-12-31" }),
   ];
 
-  it("writes the indexes and a page for every letter, correspondent and decade", () => {
+  it("writes the indexes, the about page and a page for every letter, correspondent and decade", () => {
     expect(renderSite(letters).map((file) => file.path)).toEqual([
       "index.html",
       "letters/mar-001/index.html",
@@ -19,6 +19,7 @@ describe("renderSite", () => {
       "decades/index.html",
       "decades/1810s/index.html",
       "decades/1820s/index.html",
+      "about/index.html",
       "letters.json",
     ]);
   });

@@ -42,7 +42,7 @@ export const HomePage = ({ letters, correspondentCount, decades }: HomePageProps
           )}
         </dl>
       </header>
-      <section aria-labelledby="all-letters">
+      <section aria-labelledby="all-letters" className="section">
         <h2 id="all-letters">All letters</h2>
         <p className="section-note">
           {countLabel(letters.length, "letter")} in date order. Uncertain dates are placed by their earliest possible

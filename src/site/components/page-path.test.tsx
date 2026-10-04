@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { renderAtPath } from "../../../tests/support/render";
 import { SiteLink } from "./page-path";
 
@@ -15,5 +15,9 @@ describe("SiteLink", () => {
       </SiteLink>,
     );
     expect(screen.getByRole("link", { name: "Next" })).toHaveAttribute("rel", "next");
+  });
+  it("refuses to render outside a page, where relative links would be wrong", () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(() => render(<SiteLink to="decades/">Decades</SiteLink>)).toThrow("PagePathProvider");
   });
 });

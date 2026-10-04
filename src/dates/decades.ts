@@ -14,7 +14,6 @@ export const decadesOverlapping = ({ earliest, latest }: DateRange): number[] =>
   return Array.from({ length: decadeCount }, (_, index) => firstDecade + index * 10);
 };
 
-/** True only when both ends of the range are known and fall within the decade. */
 export const isCertainlyWithinDecade = ({ earliest, latest }: DateRange, decade: number): boolean => {
   return earliest !== null && latest !== null && decadeOf(earliest) === decade && decadeOf(latest) === decade;
 };
