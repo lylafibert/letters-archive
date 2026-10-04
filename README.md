@@ -120,9 +120,9 @@ and review are led by the maintainer. Key decisions included:
   paid off. Turned down tooling that was overkill for the project's size,
   such as Dependabot, and recorded the trade-offs left open under known
   limitations.
-- **Checked claims, not just code.** Questioned whether the integration tests
-  were really integration tests, and had accessibility and colour contrast
-  measured rather than assumed.
+- **Checked claims, not just code.** Required accessibility and colour
+  contrast to be measured with Lighthouse rather than assumed, and reviewed
+  the site from the point of view of the researchers who would use it.
 
 Generated code is only trusted as far as it is tested. CI runs linting, type
 checks and the full test suite on every push. The integration tests build
